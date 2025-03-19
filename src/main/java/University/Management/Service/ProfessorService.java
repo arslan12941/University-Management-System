@@ -10,23 +10,30 @@ import java.util.List;
 
 @Service
 public class ProfessorService {
-    private final CourseRepository courseRepository;
     private final ProfessorRepository professorRepository;
+    private final CourseRepository courseRepository;
 
-    public ProfessorService(CourseRepository courseRepository, ProfessorRepository professorRepository) {
-        this.courseRepository = courseRepository;
+    public ProfessorService(ProfessorRepository professorRepository, CourseRepository courseRepository) {
         this.professorRepository = professorRepository;
+        this.courseRepository = courseRepository;
     }
 
-    public Professor saveProfessor(Professor professor) {
+    public Professor addProfessor(Professor professor) {
         return professorRepository.save(professor);
     }
 
-    public List<Professor> getAllProfessors() {
-        return professorRepository.findAll();
+    public Course addCourse(Long professorId, Course course) {
+        Professor professor = professorRepository.findById(professorId)
+                .orElseThrow(() -> new RuntimeException("Professor not found!"));
+
+        course.setProfessor(professor);
+        return courseRepository.save(course);
     }
 
     public List<Course> getCoursesByProfessor(Long professorId) {
+        if (!professorRepository.existsById(professorId)) {
+            throw new RuntimeException("Professor not found!");
+        }
         return courseRepository.findByProfessorId(professorId);
     }
 }

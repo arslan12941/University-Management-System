@@ -1,5 +1,6 @@
 package University.Management.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,18 +12,14 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
 
+    @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "professor_id", nullable = false)
+    @JoinColumn(name = "ProfessorID", nullable = false)
     private Professor professor;
 
-    // Constructors
     public Course() {}
-
-    public Course(String name, Professor professor) {
-        this.name = name;
-        this.professor = professor;
-    }
 
 }

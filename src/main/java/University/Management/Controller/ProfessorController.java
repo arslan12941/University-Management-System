@@ -3,6 +3,7 @@ package University.Management.Controller;
 import University.Management.Entity.Course;
 import University.Management.Entity.Professor;
 import University.Management.Service.ProfessorService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +18,20 @@ public class ProfessorController {
     }
 
     @PostMapping
-    public Professor createProfessor(@RequestBody Professor professor) {
-        return professorService.saveProfessor(professor);
+    public ResponseEntity<Professor> addProfessor(@RequestBody Professor professor) {
+        Professor savedProfessor = professorService.addProfessor(professor);
+        return ResponseEntity.ok(savedProfessor);
     }
 
-    @GetMapping
-    public List<Professor> getAllProfessors() {
-        return professorService.getAllProfessors();
+    @PostMapping("/{id}/courses")
+    public ResponseEntity<Course> addCourse(@PathVariable Long id, @RequestBody Course course) {
+        Course savedCourse = professorService.addCourse(id, course);
+        return ResponseEntity.ok(savedCourse);
     }
 
     @GetMapping("/{id}/courses")
-    public List<Course> getCoursesByProfessor(@PathVariable Long id) {
-        return professorService.getCoursesByProfessor(id);
+    public ResponseEntity<List<Course>> getCoursesByProfessor(@PathVariable Long id) {
+        List<Course> courses = professorService.getCoursesByProfessor(id);
+        return ResponseEntity.ok(courses);
     }
 }
